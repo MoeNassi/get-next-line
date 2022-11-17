@@ -2,29 +2,30 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*all;
-	int		i;
-	int		pr;
+	size_t				j;
+	char				*l;
+	unsigned int		o;
 
 	if (!s)
 		return (NULL);
-	i = ft_strlen(s - start);
-	if (len > i)
-		len = i;
-	all = malloc(len + 1);
-	if (!all)
+	o = ft_strlen(s - start);
+	if (len > o)
+		len = o;
+	l = malloc(len + 1);
+	if (!l)
 		return (NULL);
-	pr = -1;
-	while (++pr < len && s[start] && i > start)
-		all[pr] = s[start++];
-	all[pr] = '\0';
-	return (all);
+	j = -1;
+	while (++j < len && start < o && s[start])
+		l[j] = s[start++];
+	l[j] = '\0';
+	return (l);
 }
 
 size_t		ft_strlen(const char *s)
 {
 	size_t		i;
 
+	i = 0;
 	if (!s)
 		return (0);
 	while (s[i])
@@ -32,22 +33,18 @@ size_t		ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strchr(const char *s, int c)
+int		ft_strchr(const char *s, int c)
 {
 	int		i;
-	char	*ret;
 
-	ret = (char *)s;
 	i = 0;
-	while (ret[i])
+	while (s[i])
 	{
-		if (ret[i] == (char)c)
-			return (&ret[i]);
+		if (s[i] == c)
+			return (0);
 		i++;
 	}
-	if (!c)
-		return (&ret[i]);
-	return (NULL);
+	return (1);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -59,9 +56,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
+	slenght = ft_strlen(s1) + ft_strlen(s2);
 	u = 0;
 	j = 0;
-	l = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	l = malloc((slenght + 1) * sizeof(char));
 	if (!l)
 		return (NULL);
 	while (s1[u] != '\0')
