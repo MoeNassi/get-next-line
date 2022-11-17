@@ -6,7 +6,7 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:40:43 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/17 18:12:01 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/17 18:56:31 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,27 @@ char	*another_one(int fd, char *another)
 	int	i;
 
 	i = read(fd, another, BUFFER_SIZE);
-	if (i <= 0)
+	if (i < 0)
 		return (free(another), NULL);
+	another[i + 1] = '\0';
 	return (another);
 }
 
-char	*another_another(int fd, char *another)
+char	*another_another(int fd, char *another, char *last)
 {
-	int		i;
-	static char	*buff;
+	int			i;
+	char		*no;
 
-	i = -1;
+	i = 1;
 	if (!another)
 		return (free(another), NULL);
-	while (++i <= BUFFER_SIZE)
-		buff = another_one(fd, buff);
-	if (!buff)
-		return (free(buff), NULL);
-	return (another);
+	last = another_one(fd, another);
+	no = ft_strjoin(last, another);
+	free(another);
+	last = another;
+	if (!no)
+		return (free(no), NULL);
+	return (no);
 }
 
 char	*get_next_line(int fd)
@@ -51,19 +54,17 @@ char	*get_next_line(int fd)
 	if (!buff)
 		return (free(buff), NULL);
 	res = another_one(fd, buff);
-	if (res[BUFFER_SIZE] != '\n')
-	{
-		last = another_another(fd, res);
-		ft_strjoin(res, last);
-	}
+	if (!res)
+		return (free(res), NULL);
+	last = another_another(fd, res, last);
 	if (!last)
 		return (free(last), NULL);
 	return (last);
 }
 
-int main()
-{
-	int fd = open("text", O_RDONLY);
-	char *s = get_next_line(fd);
-	printf("%s\n", s);
-}
+// int main()
+// {
+// 	int fd = open("text", O_RDONLY);
+// 	char *s = get_next_line(fd);
+// 	printf("%s\n", s);
+// }
