@@ -21,9 +21,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (all);
 }
 
-int		ft_strlen(const char *s)
+size_t		ft_strlen(const char *s)
 {
-	static int		i;
+	size_t		i;
 
 	if (!s)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:40:43 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/17 14:25:48 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/17 15:37:21 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,43 +14,40 @@
 
 char	*another_one(int fd, char *another)
 {
-	int			it;
 	char		*ret;
 	static int	i;
 
-	it = -1;
-	while (another[++it] != '\n')
-		read(fd, &another[i], BUFFER_SIZE);
-	another[i] = '\0';
+	i = read(fd, another, BUFFER_SIZE);
+	if (i < 0)
+		return (free(another), NULL);
 	return (another);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buff;
-	size_t		line;
-	int			i;
+	char				*buff;
+	char				*res;
+	int					i;
 
-	line = 0;
+	i = -1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buff = malloc(BUFFER_SIZE + 2);
+	buff = malloc(BUFFER_SIZE + 1);
 	if (!buff)
-		return (NULL);
-	while (buff[++i] != '\n')
-		read(fd, &buff[i], BUFFER_SIZE);
-	buff[i] = '\0';
-	line = ft_strlen(buff);
-	if (line < 0)
 		return (free(buff), NULL);
-	return (buff);
+	while (buff[++i] != '\n')
+		res = another_one(fd, buff);
+	res[i] = '\0';
+	if (!res)
+		return (free(buff), NULL);
+	return (res);
 }
 
 // int main()
 // {
+// 	char *s;
 // 	int fd = open("text", O_RDONLY);
-// 	char *s = get_next_line(fd);
-// 	while(s)
+// 	while(s != '\0')
 // 	{
 // 		printf("%s", s);
 // 		s = get_next_line(fd);
@@ -63,7 +60,5 @@ int main()
 {
 	int fd = open("text", O_RDONLY);
 	char *s = get_next_line(fd);
-	char *p = get_next_line(fd);
 	printf("%s\n", s);
-	printf("%s\n", p);
 }
