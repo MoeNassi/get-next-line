@@ -33,7 +33,7 @@ size_t		ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strchr(const char *s, int c)
+int		ft_strchr(const char *s, int c)
 {
 	int		i;
 	char	*p;
@@ -43,10 +43,10 @@ char	*ft_strchr(const char *s, int c)
 	while (p[i])
 	{
 		if (p[i] == c)
-			return (&p[i]);
+			return (1);
 		i++;
 	}
-	return (NULL);
+	return (0);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
