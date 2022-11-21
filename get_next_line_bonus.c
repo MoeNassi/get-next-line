@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/19 22:49:30 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/21 01:37:09 by mnassi           ###   ########.fr       */
+/*   Created: 2022/11/21 00:21:00 by mnassi            #+#    #+#             */
+/*   Updated: 2022/11/21 01:28:57 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_read_line(int fd, char *reading)
+char	*ft_read_line_bonus(int fd, char *reading)
 {
 	int		count;
 	char	*stock;
@@ -35,7 +35,7 @@ char	*ft_read_line(int fd, char *reading)
 }
 
 
-char	*ft_stock_line(char *ret)
+char	*ft_stock_line_bonus(char *ret)
 {
 	int		in;
 	char	*sec;
@@ -60,7 +60,7 @@ char	*ft_stock_line(char *ret)
 	return (sec);
 }
 
-char	*ft_next_line(char *next)
+char	*ft_next_line_bonus(char *next)
 {
 	int		line;
 	char	*alc;
@@ -74,7 +74,7 @@ char	*ft_next_line(char *next)
 		return (free(next), NULL);
 	alc = malloc((ft_strlen(next) - line + 1) * sizeof(char));
 	if (!alc)
-		return (NULL);
+		return (free(next), NULL);
 	line++;
 	while (next[line])
 		alc[copy++] = next[line++];
@@ -85,23 +85,15 @@ char	*ft_next_line(char *next)
 
 char	*get_next_line(int fd)
 {
-	static char		*stats;
+	static char		*stats[10241];
 	char			*stock;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	stats = ft_read_line(fd, stats);
-	if (!stats)
-		return (free(stats), NULL);
-	stock = ft_stock_line(stats);
-	stats = ft_next_line(stats);
+	stats[fd] = ft_read_line_bonus(fd, stats[fd]);
+	if (!stats[fd])
+		return (free(stats[fd]), NULL);
+	stock = ft_stock_line_bonus(stats[fd]);
+	stats[fd] = ft_next_line_bonus(stats[fd]);
 	return (stock);
-}
-
-int main()
-{
-	int fd = open("get_next_line.h", O_RDONLY);
-		printf("%s", get_next_line(fd));
-	fd = open("get_next_line.h", O_RDONLY);
-		printf("%s", get_next_line(fd));
 }
