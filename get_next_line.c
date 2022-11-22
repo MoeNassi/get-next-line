@@ -6,7 +6,7 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 22:49:30 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/21 01:37:09 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/22 10:32:51 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ char	*ft_read_line(int fd, char *reading)
 	stock = malloc(BUFFER_SIZE + 1);
 	if (!stock)
 		return (NULL);
-	while (count > 0 && !ft_strchr(reading, '\n'))
+	while (count > 0)
 	{
+		if (ft_strchr(reading, '\n'))
+			break ;
 		count = read(fd, stock, BUFFER_SIZE);
-		if (count < 0 || (count == 0 && !reading)
-			|| (count == 0 && reading[0] == 0))
+		if ((count < 0 || count == 0) && (!reading || !*reading))
 			return (free(stock), free(reading), NULL);
 		stock[count] = '\0';
 		reading = ft_strjoin(reading, stock);
@@ -33,7 +34,6 @@ char	*ft_read_line(int fd, char *reading)
 	free(stock);
 	return (reading);
 }
-
 
 char	*ft_stock_line(char *ret)
 {
@@ -46,9 +46,9 @@ char	*ft_stock_line(char *ret)
 	while (ret[in] && ret[in] != '\n')
 		in++;
 	if (ret[in] && ret[in] != '\n')
-		sec = malloc((in + 2) * sizeof(char));
+		sec = malloc(in + 2);
 	else
-		sec = malloc((in + 1) * sizeof(char));
+		sec = malloc(in + 1);
 	if (!sec)
 		return (NULL);
 	while (ret[i] && i < in + 1)
@@ -64,15 +64,17 @@ char	*ft_next_line(char *next)
 {
 	int		line;
 	char	*alc;
+	int		lenght;
 	int		copy;
 
 	line = 0;
 	copy = 0;
 	while (next[line] && next[line] != '\n')
 		line++;
-	if (!next[line])
-		return (free(next), NULL);
-	alc = malloc((ft_strlen(next) - line + 1) * sizeof(char));
+	lenght = ft_strlen(next);
+	alc = malloc(lenght - line + 1);
+	if (lenght == line)
+		return (free(next), free(alc), NULL);
 	if (!alc)
 		return (NULL);
 	line++;
@@ -92,16 +94,21 @@ char	*get_next_line(int fd)
 		return (NULL);
 	stats = ft_read_line(fd, stats);
 	if (!stats)
+		return (NULL);
+	if (!*stats)
 		return (free(stats), NULL);
 	stock = ft_stock_line(stats);
 	stats = ft_next_line(stats);
 	return (stock);
 }
 
-int main()
-{
-	int fd = open("get_next_line.h", O_RDONLY);
-		printf("%s", get_next_line(fd));
-	fd = open("get_next_line.h", O_RDONLY);
-		printf("%s", get_next_line(fd));
-}
+// int main()
+// {
+// 	int fd = open("file.txt", O_RDONLY);
+// 	char *s = get_next_line(fd);
+// 	while (s)
+// 	{
+// 		printf("%s", s);
+// 		s = get_next_line(fd);
+// 	}
+// }

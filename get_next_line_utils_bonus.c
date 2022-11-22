@@ -6,13 +6,13 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/20 23:30:11 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/20 23:30:13 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/22 09:02:59 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t		i;
 
@@ -69,7 +69,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (l);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	int		i;
 	char	*gnl;
