@@ -6,7 +6,7 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 22:58:50 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/22 09:03:28 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/22 20:15:02 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,25 +88,4 @@ char	*ft_strdup(char *s1)
 		gnl[pr++] = s1[sec++];
 	gnl[pr] = '\0';
 	return (gnl);
-}
-
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	size_t				j;
-	char				*l;
-	unsigned int		o;
-
-	if (!s)
-		return (NULL);
-	o = ft_strlen(s);
-	if (len > o)
-		len = o;
-	l = malloc(len + 1);
-	if (!l)
-		return (NULL);
-	j = -1;
-	while (++j < len && start < o && s[start])
-		l[j] = s[start++];
-	l[j] = '\0';
-	return (l);
 }

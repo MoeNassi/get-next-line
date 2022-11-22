@@ -6,7 +6,7 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/20 23:30:11 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/22 09:02:59 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/22 20:12:53 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ char	*ft_strdup(char *s1)
 	gnl = malloc(i + 1);
 	if (!gnl)
 		return (NULL);
-	pr = -1;
-	while (s1[--sec])
-		gnl[pr++] = s1[sec];
+	pr = 0;
+	while (s1[sec])
+		gnl[pr++] = s1[sec++];
 	gnl[pr] = '\0';
 	return (gnl);
 }

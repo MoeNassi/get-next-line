@@ -6,11 +6,28 @@
 /*   By: mnassi <mnassi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 22:49:30 by mnassi            #+#    #+#             */
-/*   Updated: 2022/11/22 10:32:51 by mnassi           ###   ########.fr       */
+/*   Updated: 2022/11/22 20:18:18 by mnassi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	*alloc(size_t size)
+{
+	unsigned char	*pt;
+	size_t			i;
+
+	i = 0;
+	pt = malloc(size);
+	if (pt == NULL)
+		return (NULL);
+	while (i < size)
+	{
+		pt[i] = 0;
+		i++;
+	}
+	return (pt);
+}
 
 char	*ft_read_line(int fd, char *reading)
 {
@@ -21,12 +38,11 @@ char	*ft_read_line(int fd, char *reading)
 	stock = malloc(BUFFER_SIZE + 1);
 	if (!stock)
 		return (NULL);
-	while (count > 0)
+	while (count > 0 && !ft_strchr(reading, '\n'))
 	{
-		if (ft_strchr(reading, '\n'))
-			break ;
 		count = read(fd, stock, BUFFER_SIZE);
-		if ((count < 0 || count == 0) && (!reading || !*reading))
+		if (count < 0 || (count == 0 && !reading)
+			|| (count == 0 && reading[0] == 0))
 			return (free(stock), free(reading), NULL);
 		stock[count] = '\0';
 		reading = ft_strjoin(reading, stock);
@@ -43,15 +59,14 @@ char	*ft_stock_line(char *ret)
 
 	i = 0;
 	in = 0;
-	while (ret[in] && ret[in] != '\n')
+	while (ret[in] != '\n' && ret[in])
 		in++;
-	if (ret[in] && ret[in] != '\n')
-		sec = malloc(in + 2);
-	else
-		sec = malloc(in + 1);
+	sec = alloc(in + 2);
 	if (!sec)
-		return (NULL);
-	while (ret[i] && i < in + 1)
+		return (free(ret), NULL);
+	if (ret[in] == '\n')
+		in++;
+	while (ret[i] && i < in)
 	{
 		sec[i] = ret[i];
 		i++;
@@ -72,11 +87,11 @@ char	*ft_next_line(char *next)
 	while (next[line] && next[line] != '\n')
 		line++;
 	lenght = ft_strlen(next);
-	alc = malloc(lenght - line + 1);
 	if (lenght == line)
-		return (free(next), free(alc), NULL);
+		return (free(next), NULL);
+	alc = malloc((lenght - line) + 1);
 	if (!alc)
-		return (NULL);
+		return (free(next), NULL);
 	line++;
 	while (next[line])
 		alc[copy++] = next[line++];
@@ -88,7 +103,7 @@ char	*ft_next_line(char *next)
 char	*get_next_line(int fd)
 {
 	static char		*stats;
-	char			*stock;
+	char			*notsta;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -97,18 +112,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!*stats)
 		return (free(stats), NULL);
-	stock = ft_stock_line(stats);
+	notsta = ft_stock_line(stats);
 	stats = ft_next_line(stats);
-	return (stock);
+	return (notsta);
 }
-
-// int main()
-// {
-// 	int fd = open("file.txt", O_RDONLY);
-// 	char *s = get_next_line(fd);
-// 	while (s)
-// 	{
-// 		printf("%s", s);
-// 		s = get_next_line(fd);
-// 	}
-// }
